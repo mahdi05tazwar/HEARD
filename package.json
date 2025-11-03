@@ -4,9 +4,12 @@
   "type": "module",
   "name": "heard",
   "description": "The HEARD platform, based on React.",
+  "homepage": "https://mahdi05tazwar.github.io/HEARD",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.1",
