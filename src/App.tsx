@@ -16,7 +16,7 @@ import { Technology } from './pages/Technology';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/HEARD">
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-grow">
