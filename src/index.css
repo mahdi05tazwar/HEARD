@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 218 23% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 218 23% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 218 23% 18%;
+    --primary: 220 100% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 100% 66%;
+    --secondary-foreground: 0 0% 100%;
+    --tertiary: 21 100% 57%;
+    --tertiary-foreground: 0 0% 100%;
+    --muted: 220 40% 98%;
+    --muted-foreground: 220 8% 45%;
+    --accent: 220 100% 96%;
+    --accent-foreground: 218 23% 18%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 35% 95%;
+    --input: 220 35% 95%;
+    --ring: 220 100% 56%;
+    --radius: 12px;
+    --success: 142 81% 36%;
+    --warning: 38 92% 50%;
+    
+    --color-gray-50: 0 0% 100%;
+    --color-gray-100: 220 40% 98%;
+    --color-gray-200: 220 35% 95%;
+    --color-gray-300: 220 15% 90%;
+    --color-gray-400: 220 10% 80%;
+    --color-gray-500: 220 8% 65%;
+    --color-gray-600: 220 8% 45%;
+    --color-gray-700: 218 12% 30%;
+    --color-gray-800: 218 15% 20%;
+    --color-gray-900: 218 23% 12%;
+    
+    --font-sans: "DM Sans", sans-serif;
+    --font-body: "Inter", sans-serif;
+    --font-mono: "IBM Plex Mono", monospace;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html,
+  body {
+    @apply bg-background text-foreground font-body;
+    scroll-behavior: smooth;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans text-foreground;
+  }
+  
+  p, span, div, a {
+    @apply text-foreground;
+  }
+}
