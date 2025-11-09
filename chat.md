@@ -23,3 +23,8 @@
 ## Usage of Copilot
 * Prompt: "[Long code provided.] How to make the navbar mobile-friendly? It doesn't wrap according to mobile screen dimensions. Tell me if I need to include more code."
     * Response Summary: Copilot regenerated the code for the navigation bar such that it is mobile-friendly. (Other aspects of the frontend appear to be adjusted for mobile already.)
+
+<br>
+
+## Evolution
+The first version was just a collection of a few webpages, and slowly more were added by the AI prompts. Some of the images and text were modified manually. The navigation bar at the beginning was working properly only on laptop/desktop interfaces, and later on with AI and some manual bug-fixes, a cleaner hamburger-menu was adjusted for mobile UIs.
