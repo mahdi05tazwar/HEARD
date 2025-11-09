@@ -1,31 +1,6 @@
 # HEARD
 
-Welcome! This project has been generated mostly with Anima.
-
-## Getting started
-
-> **Prerequisites:**
-> The following steps require [NodeJS](https://nodejs.org/en/) to be installed on your system, so please
-> install it beforehand if you haven't already.
-
-To get started with your project, you'll first need to install the dependencies with:
-
-```
-npm install
-```
-
-Then, you'll be able to run a development version of the project with:
-
-```
-npm run dev
-```
-
-After a few seconds, your project should be accessible at the address
-[http://localhost:5173/](http://localhost:5173/)
-
-
-If you are satisfied with the result, you can finally build the project for release with:
-
-```
-npm run build
-```
+Welcome! This is the source code of HEARD.
+This project has been mostly vibe-coded with Anima and Copilot.
+The web app is deployed at https://mahdi05tazwar.github.io/HEARD/.
+The repository also contains the chat.md file summarising the chat with AI when generating the web app source.
