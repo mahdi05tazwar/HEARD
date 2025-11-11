@@ -9,24 +9,19 @@ export function About() {
 
   const timeline = [
     {
-      year: '2020',
+      month: 'Sep',
       title: 'The Beginning',
       description: 'Heard was founded with a simple mission: make emotional support accessible to everyone.',
     },
     {
-      year: '2021',
-      title: 'Growing Community',
-      description: 'We reached 10,000 users and trained our first 100 empathetic listeners.',
+      month: 'Oct',
+      title: 'Bringing Heard to Life',
+      description: 'We started the frontend development of Heard.',
     },
     {
-      year: '2022',
-      title: 'AI Integration',
-      description: 'Launched our AI matching system to connect users with the perfect listener.',
-    },
-    {
-      year: '2023',
-      title: 'Global Expansion',
-      description: 'Expanded to serve users in 50 countries, providing support in multiple languages.',
+      month: 'Nov',
+      title: 'Pushing Further',
+      description: 'Developing all the features that give Heard its purpose.',
     },
   ];
 
@@ -55,18 +50,18 @@ export function About() {
 
   const team = [
     {
-      name: 'Dr. Sarah Johnson',
-      title: 'Founder & CEO',
+      name: 'Abir Ahsan Habib',
+      title: 'Team Leader/Manager',
       bio: 'Clinical psychologist with 15 years of experience in mental health advocacy.',
     },
     {
-      name: 'Michael Chen',
-      title: 'Head of Technology',
+      name: 'Wang Yam Yuk',
+      title: 'AI Engineer',
       bio: 'AI specialist focused on creating ethical and effective matching algorithms.',
     },
     {
-      name: 'Emily Rodriguez',
-      title: 'Community Director',
+      name: 'Md Mahdi Tajwar Raeed',
+      title: 'Web Developer',
       bio: 'Passionate about building supportive communities and training empathetic listeners.',
     },
   ];
@@ -112,7 +107,7 @@ export function About() {
           <div className="max-w-4xl mx-auto space-y-12">
             {timeline.map((item, index) => (
               <div
-                key={item.year}
+                key={item.month}
                 className={`flex flex-col md:flex-row gap-8 items-start ${
                   index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
                 }`}
@@ -122,7 +117,7 @@ export function About() {
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
                         <span className="font-sans font-bold text-xl text-primary-foreground">
-                          {item.year}
+                          {item.month}
                         </span>
                       </div>
                       <h3 className="font-sans font-semibold text-2xl text-gray-900">
@@ -181,18 +176,11 @@ export function About() {
                 className="p-8 bg-card border border-border rounded-lg"
               >
                 <div className="flex flex-col items-center text-center gap-4">
-                  <img
-                    src='https://images.nationalgeographic.org/image/upload/t_edhub_resource_key_image/v1638882786/EducationHub/photos/sun-blasts-a-m66-flare.jpg'
-                    alt={`${member.name} profile`}
-                    className="w-24 h-24 rounded-full object-cover"
-                    loading="lazy"
-                  />
                   <div>
                     <h3 className="font-sans font-semibold text-xl text-gray-900 mb-1">
                       {member.name}
                     </h3>
                     <p className="text-primary font-medium mb-3">{member.title}</p>
-                    <p className="text-gray-600 leading-relaxed text-sm">{member.bio}</p>
                   </div>
                 </div>
               </Card>
@@ -200,6 +188,7 @@ export function About() {
           </div>
         </div>
       </section>
+
     </div>
   );
 }

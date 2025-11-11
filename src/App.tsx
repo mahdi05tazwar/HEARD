@@ -6,17 +6,17 @@ import { Login } from './pages/Login';
 import { About } from './pages/About';
 import { HowItWorks } from './pages/HowItWorks';
 import { Pricing } from './pages/Pricing';
-import { AISupport } from './pages/AISupport';
 import { BecomeListener } from './pages/BecomeListener';
 import { Resources } from './pages/Resources';
 import { Privacy } from './pages/Privacy';
 import { Contact } from './pages/Contact';
 import { Corporate } from './pages/Corporate';
 import { Technology } from './pages/Technology';
+import { FloatingChatIcon } from '@/components/FloatingChatIcon';
 
 function App() {
   return (
-    <Router basename="/HEARD">
+    <Router basename="/heard">
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-grow">
@@ -26,7 +26,6 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/pricing" element={<Pricing />} />
-            <Route path="/ai-support" element={<AISupport />} />
             <Route path="/become-listener" element={<BecomeListener />} />
             <Route path="/start-conversation" element={<Login />} />
             <Route path="/resources" element={<Resources />} />
@@ -46,6 +45,7 @@ function App() {
         </main>
         <Footer />
       </div>
+      <FloatingChatIcon />
     </Router>
   );
 }

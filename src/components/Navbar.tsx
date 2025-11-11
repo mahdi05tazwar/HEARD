@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import logo from '@/assets/logo.png';
-import { ChevronDownIcon, MenuIcon, XIcon } from 'lucide-react';
+import { ChevronDownIcon, MenuIcon, XIcon, LogOutIcon } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { ChatDialog } from '@/components/ChatDialog';
+
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, logout } = useAuth();
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -17,7 +23,6 @@ export function Navbar() {
     { label: 'About Us', path: '/about' },
     { label: 'How It Works', path: '/how-it-works' },
     { label: 'Pricing', path: '/pricing' },
-    { label: 'AI Support', path: '/ai-support' },
     { label: 'Become a Listener', path: '/become-listener' },
     { label: 'Resources', path: '/resources' },
   ];
@@ -63,8 +68,39 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // prevent background scroll when mobile menu is open
+  useEffect(() => {
+    // remember previous overflow so we can restore it
+    const prevOverflow = typeof document !== 'undefined' ? document.body.style.overflow : '';
+    if (isMobileOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = prevOverflow || '';
+    return () => {
+      // restore on unmount
+      document.body.style.overflow = prevOverflow || '';
+    };
+  }, [isMobileOpen]);
+
   // combined links for mobile (nav + more)
   const mobileLinks = [...navLinks, ...moreLinks];
+
+  // action handlers
+  const handleStartConversation = () => {
+    // if not authenticated, send to login; otherwise open dialog
+    if (!isAuthenticated) {
+      navigate('/login');
+      setIsMobileOpen(false);
+      return;
+    }
+    setIsChatOpen(true);
+    setIsMobileOpen(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setIsChatOpen(false);
+    navigate('/');
+    setIsMobileOpen(false);
+  };
 
   return (
     <nav
@@ -147,13 +183,34 @@ export function Navbar() {
               >
                 <Link to="/become-listener">Become a Listener</Link>
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                className="border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
-              >
-                <Link to="/login">Login / Sign Up</Link>
-              </Button>
+
+              {/* Auth-dependent controls */}
+              {isAuthenticated ? (
+                <>
+                  <Button
+                    onClick={handleStartConversation}
+                    className="bg-primary hover:bg-primary/90 font-normal whitespace-nowrap"
+                  >
+                    <span className="text-white">Start A Conversation</span>
+                  </Button>
+
+                  <button
+                    onClick={handleLogout}
+                    aria-label="Logout"
+                    className="ml-2 p-2 rounded-md hover:bg-gray-100"
+                  >
+                    <LogOutIcon size={18} />
+                  </button>
+                </>
+              ) : (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
+                >
+                  <Link to="/login">Login / Sign Up</Link>
+                </Button>
+              )}
             </div>
 
             {/* Mobile hamburger toggle */}
@@ -200,19 +257,49 @@ export function Navbar() {
                     Become a Listener
                   </Link>
                 </Button>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="w-full border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
-                >
-                  <Link to="/login" onClick={() => setIsMobileOpen(false)}>
-                    Login / Sign Up
-                  </Link>
-                </Button>
+
+                {isAuthenticated ? (
+                  <>
+                    <Button
+                      onClick={handleStartConversation}
+                      className="w-full bg-primary hover:bg-primary/90 font-normal whitespace-nowrap"
+                    >
+                      <span className="text-white">Start A Conversation</span>
+                    </Button>
+
+                    <button
+                      onClick={handleLogout}
+                      aria-label="Logout"
+                      className="w-full mt-2 p-3 flex items-center justify-center gap-2 rounded-md border border-border bg-background hover:bg-gray-50"
+                    >
+                      <LogOutIcon size={16} />
+                      <span className="text-sm font-medium">Logout</span>
+                    </button>
+                  </>
+                ) : (
+                  <Button
+                    asChild
+                    variant="outline"
+                    className="w-full border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
+                  >
+                    <Link to="/login" onClick={() => setIsMobileOpen(false)}>
+                      Login / Sign Up
+                    </Link>
+                  </Button>
+                )}
               </div>
             </nav>
           </div>
         </div>
+      )}
+
+
+      
+      {isAuthenticated && (
+        <ChatDialog
+          isOpen={isChatOpen}
+          onClose={() => setIsChatOpen(false)}
+        />
       )}
     </nav>
   );

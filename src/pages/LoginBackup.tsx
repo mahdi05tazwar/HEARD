@@ -4,25 +4,15 @@ import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MailIcon, LockIcon } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from "@/assets/logo.png";
-import { useAuth } from '@/contexts/AuthContext'; // <- adjust path to where AuthContext lives
 
 export function Login() {
   const [activeTab, setActiveTab] = useState('login');
-  const { login } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  // simple handler that uses the AuthContext and navigates to home or conversation page
-  const handleAuthSuccess = (redirectTo = '/') => {
-    login();
-    // after login, redirect to a conversation area or home
-    navigate(redirectTo);
-  };
 
   return (
     <div className="min-h-screen pt-32 pb-20 bg-gradient-1">
@@ -87,7 +77,6 @@ export function Login() {
                 </div>
 
                 <Button
-                  onClick={() => handleAuthSuccess('/')}
                   className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base"
                 >
                   Login
@@ -148,7 +137,6 @@ export function Login() {
                 </div>
 
                 <Button
-                  onClick={() => handleAuthSuccess('/conversation')}
                   className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base"
                 >
                   Sign Up

@@ -22,40 +22,13 @@ export function Footer() {
             </p>
             <div className="flex gap-4">
               <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-gray-700 hover:bg-primary rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-                aria-label="Facebook"
-              >
-                <FacebookIcon size={20} strokeWidth={1.5} className="text-gray-100" />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-gray-700 hover:bg-primary rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-                aria-label="Twitter"
-              >
-                <TwitterIcon size={20} strokeWidth={1.5} className="text-gray-100" />
-              </a>
-              <a
-                href="https://instagram.com"
+                href="https://www.instagram.com/heard_app/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-700 hover:bg-primary rounded-lg flex items-center justify-center transition-colors cursor-pointer"
                 aria-label="Instagram"
               >
                 <InstagramIcon size={20} strokeWidth={1.5} className="text-gray-100" />
-              </a>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-gray-700 hover:bg-primary rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-                aria-label="LinkedIn"
-              >
-                <LinkedinIcon size={20} strokeWidth={1.5} className="text-gray-100" />
               </a>
             </div>
           </div>
@@ -129,10 +102,10 @@ export function Footer() {
         <div className="pt-8 border-t border-gray-700">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-gray-400 text-sm">
-              Contact: support@heard.com | Crisis Hotline: 1-800-273-8255
+              Contact: +852 9817 4918
             </p>
             <p className="text-gray-400 text-sm">
-              © 2024 Heard. All rights reserved. Not a substitute for professional medical advice.
+              © 2025 Heard. All rights reserved. Not a substitute for professional medical advice.
             </p>
           </div>
         </div>
