@@ -16,7 +16,7 @@ import { FloatingChatIcon } from '@/components/FloatingChatIcon';
 
 function App() {
   return (
-    <Router basename="/heard">
+    <Router basename="/HEARD/">
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-grow">
