@@ -118,7 +118,7 @@ export function BecomeListener() {
                 size="lg"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base"
               >
-                <Link to="/apply">Apply Now</Link>
+                <Link to="/listener-auth">Apply Now</Link>
               </Button>
               <Button
                 asChild
@@ -297,7 +297,7 @@ export function BecomeListener() {
                 size="lg"
                 className="bg-background text-primary hover:bg-background/90 font-normal text-base"
               >
-                <Link to="/apply">Start Your Application</Link>
+                <Link to="/listener-auth">Start Your Application</Link>
               </Button>
               <Button
                 asChild

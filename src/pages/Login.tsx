@@ -148,7 +148,7 @@ export function Login() {
                 </div>
 
                 <Button
-                  onClick={() => handleAuthSuccess('/conversation')}
+                  onClick={() => handleAuthSuccess('/')}
                   className="w-full h-12 bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base"
                 >
                   Sign Up

@@ -1,12 +1,29 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { FeatureCard } from '@/components/FeatureCard';
 import { StepCard } from '@/components/StepCard';
 import { TestimonialCard } from '@/components/TestimonialCard';
 import { DollarSignIcon, ShieldIcon, HeartIcon, SparklesIcon, MessageCircleIcon, UserCheckIcon, CheckCircleIcon, ClockIcon, UsersIcon, HeadphonesIcon, ArrowRightIcon } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { ChatDialog } from '@/components/ChatDialog';
+import { useNavigate } from 'react-router-dom';
+
 
 export function Home() {
+
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handleStartConversationClick = () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    setIsChatOpen(true);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -24,25 +41,34 @@ export function Home() {
               <p className="text-xl text-gray-700 leading-relaxed">
                 Connect with empathetic listeners for affordable, anonymous conversations. Get the support you need, whenever you need it.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 items-start">
+              <div className="flex flex-col sm:flex-row gap-4 items-center">
+                {/* Primary Start button */}
+                <Button
+                  onClick={handleStartConversationClick}
+                  size="lg"
+                  type="button"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base inline-flex items-center justify-center gap-2 py-3"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <span className="text-primary-foreground">Start a Conversation</span>
+                    <ArrowRightIcon size={18} strokeWidth={1.5} className="text-primary-foreground" />
+                  </span>
+                </Button>
+
+
+                {/* Secondary Become a Listener button */}
                 <Button
                   asChild
                   size="lg"
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base"
+                  className="border-primary text-primary bg-background hover:bg-primary/5 font-normal text-base inline-flex items-center justify-center gap-2 py-3"
                 >
-                  <Link to="/start-conversation">
-                    Start a Conversation
-                    <ArrowRightIcon size={20} strokeWidth={1.5} className="ml-2" />
+                  <Link to="/become-listener" className="inline-flex items-center gap-2">
+                    <span>Become a Listener</span>
+                    <ArrowRightIcon size={18} strokeWidth={1.5} />
                   </Link>
                 </Button>
-                <Link
-                  to="/become-listener"
-                  className="text-primary hover:text-primary/80 font-medium text-base flex items-center gap-2 cursor-pointer transition-colors py-3"
-                >
-                  Become a Listener
-                  <ArrowRightIcon size={20} strokeWidth={1.5} />
-                </Link>
               </div>
+
             </div>
             <div className="order-first lg:order-last">
               <div className="h-[400px] lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl">
@@ -128,15 +154,17 @@ export function Home() {
               description="Begin your conversation and feel the relief of being truly heard."
             />
           </div>
-          <div className="text-center">
-            <Button
-              asChild
-              size="lg"
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base"
-            >
-              <Link to="/start-conversation">Get Started Now</Link>
-            </Button>
-          </div>
+          {!isAuthenticated && (
+            <div className="text-center">
+              <Button
+                asChild
+                size="lg"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-normal text-base"
+              >
+                <Link to="/start-conversation">Get Started Now</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </section>
 
@@ -222,15 +250,17 @@ export function Home() {
               Take the first step towards emotional wellness. Start a conversation today and experience the relief of being truly heard.
             </p>
             <Button
-              asChild
+              onClick={handleStartConversationClick}
               size="lg"
               className="bg-background text-primary hover:bg-background/90 font-normal text-base"
             >
-              <Link to="/start-conversation">Start a Conversation</Link>
+              Start a Conversation
             </Button>
           </div>
         </div>
       </section>
+    {/* ChatDialog controlled by Home */}
+    <ChatDialog isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 }

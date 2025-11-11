@@ -13,6 +13,9 @@ import { Contact } from './pages/Contact';
 import { Corporate } from './pages/Corporate';
 import { Technology } from './pages/Technology';
 import { FloatingChatIcon } from '@/components/FloatingChatIcon';
+import { ListenerAuth } from '@/pages/ListenerAuth';
+import { ListenerVerification } from '@/pages/ListenerVerification';
+
 
 function App() {
   return (
@@ -27,6 +30,8 @@ function App() {
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/become-listener" element={<BecomeListener />} />
+            <Route path="/listener-auth" element={<ListenerAuth />} />
+            <Route path="/listener-verification" element={<ListenerVerification />} />
             <Route path="/start-conversation" element={<Login />} />
             <Route path="/resources" element={<Resources />} />
             <Route path="/privacy" element={<Privacy />} />
@@ -39,7 +44,6 @@ function App() {
             <Route path="/faq" element={<Contact />} />
             <Route path="/terms" element={<Home />} />
             <Route path="/forgot-password" element={<Login />} />
-            <Route path="/apply" element={<Login />} />
             <Route path="/learn-more" element={<BecomeListener />} />
           </Routes>
         </main>

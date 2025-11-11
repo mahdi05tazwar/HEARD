@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import logo from '@/assets/logo.png';
@@ -15,6 +15,7 @@ export function Navbar() {
   const navigate = useNavigate();
   const { isAuthenticated, logout } = useAuth();
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const mobileScrollRef = useRef<HTMLDivElement | null>(null);
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -79,6 +80,32 @@ export function Navbar() {
       document.body.style.overflow = prevOverflow || '';
     };
   }, [isMobileOpen]);
+
+  // Allow inner scrolling on iOS while body is locked
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const el = mobileScrollRef.current;
+    if (!el) return;
+
+    // Prevent touchmove on the body except when the touch starts inside the scrollable panel
+    const handleTouchMove = (e: TouchEvent) => {
+      // If the touch is inside our scrollable element, allow it
+      if (e.target && el.contains(e.target as Node)) return;
+      e.preventDefault();
+    };
+
+    if (isMobileOpen) {
+      document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    } else {
+      document.removeEventListener('touchmove', handleTouchMove);
+    }
+
+    return () => {
+      document.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, [isMobileOpen]);
+
 
   // combined links for mobile (nav + more)
   const mobileLinks = [...navLinks, ...moreLinks];
@@ -228,70 +255,102 @@ export function Navbar() {
 
       {/* Mobile menu (small screens only) */}
       {isMobileOpen && (
-        <div className="md:hidden mobile-menu bg-background border-t border-gray-200">
-          <div className="container mx-auto px-4 py-4">
-            <nav>
-              <ul className="flex flex-col gap-1">
-                {mobileLinks.map((link) => (
-                  <li key={link.path}>
-                    <Link
-                      to={link.path}
-                      className={`block px-3 py-3 rounded-md text-sm font-medium ${
-                        isActive(link.path) ? 'bg-accent text-primary' : 'text-gray-700 hover:bg-gray-50'
-                      }`}
-                      onClick={() => setIsMobileOpen(false)}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+        <div className="md:hidden fixed inset-0 z-50">
+          {/* dim backdrop */}
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setIsMobileOpen(false)}
+            aria-hidden="true"
+          />
 
-              <div className="mt-4 flex flex-col gap-2">
-                <Button
-                  asChild
-                  variant="default"
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-normal whitespace-nowrap"
-                >
-                  <Link to="/become-listener" onClick={() => setIsMobileOpen(false)}>
-                    Become a Listener
-                  </Link>
-                </Button>
+          {/* centered panel */}
+          <div className="relative z-10 mx-4 my-6 bg-background rounded-2xl shadow-xl overflow-hidden">
+            {/* close button (top-right) */}
+            <div className="absolute top-3 right-3 z-50">
+              <button
+                onClick={() => setIsMobileOpen(false)}
+                aria-label="Close menu"
+                title="Close menu"
+                className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center hover:bg-black/90 focus:outline-none focus:ring-2 focus:ring-black/30 transition"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
 
-                {isAuthenticated ? (
-                  <>
+            {/* scrollable area: limit height and allow touch scrolling on iOS */}
+            <div
+              ref={mobileScrollRef}
+              className="max-h-[calc(100vh-6rem)] overflow-y-auto p-4"
+              style={{ WebkitOverflowScrolling: 'touch', touchAction: 'auto' }}
+            >
+              <div className="container mx-auto px-0 py-2">
+                <nav>
+                  <ul className="flex flex-col gap-1">
+                    {mobileLinks.map((link) => (
+                      <li key={link.path}>
+                        <Link
+                          to={link.path}
+                          className={`block px-3 py-3 rounded-md text-sm font-medium ${
+                            isActive(link.path) ? 'bg-accent text-primary' : 'text-gray-700 hover:bg-gray-50'
+                          }`}
+                          onClick={() => setIsMobileOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-4 flex flex-col gap-2">
                     <Button
-                      onClick={handleStartConversation}
-                      className="w-full bg-primary hover:bg-primary/90 font-normal whitespace-nowrap"
+                      asChild
+                      variant="default"
+                      className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-normal whitespace-nowrap"
                     >
-                      <span className="text-white">Start A Conversation</span>
+                      <Link to="/become-listener" onClick={() => setIsMobileOpen(false)}>
+                        Become a Listener
+                      </Link>
                     </Button>
 
-                    <button
-                      onClick={handleLogout}
-                      aria-label="Logout"
-                      className="w-full mt-2 p-3 flex items-center justify-center gap-2 rounded-md border border-border bg-background hover:bg-gray-50"
-                    >
-                      <LogOutIcon size={16} />
-                      <span className="text-sm font-medium">Logout</span>
-                    </button>
-                  </>
-                ) : (
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="w-full border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
-                  >
-                    <Link to="/login" onClick={() => setIsMobileOpen(false)}>
-                      Login / Sign Up
-                    </Link>
-                  </Button>
-                )}
+                    {isAuthenticated ? (
+                      <>
+                        <Button
+                          onClick={handleStartConversation}
+                          className="w-full bg-primary hover:bg-primary/90 font-normal whitespace-nowrap"
+                        >
+                          <span className="text-white">Start A Conversation</span>
+                        </Button>
+
+                        <button
+                          onClick={handleLogout}
+                          aria-label="Logout"
+                          className="w-full mt-2 p-3 flex items-center justify-center gap-2 rounded-md border border-border bg-background hover:bg-gray-50"
+                        >
+                          <LogOutIcon size={16} />
+                          <span className="text-sm font-medium">Logout</span>
+                        </button>
+                      </>
+                    ) : (
+                      <Button
+                        asChild
+                        variant="outline"
+                        className="w-full border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
+                      >
+                        <Link to="/login" onClick={() => setIsMobileOpen(false)}>
+                          Login / Sign Up
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </nav>
               </div>
-            </nav>
+            </div>
           </div>
         </div>
       )}
+
 
 
       
