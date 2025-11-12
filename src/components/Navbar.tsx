@@ -24,6 +24,7 @@ export function Navbar() {
     { label: 'About Us', path: '/about' },
     { label: 'How It Works', path: '/how-it-works' },
     { label: 'Pricing', path: '/pricing' },
+    { label: 'Become a Listener', path: '/become-listener' },
     { label: 'Resources', path: '/resources' },
   ];
 
@@ -208,13 +209,6 @@ export function Navbar() {
           {/* Right-side buttons */}
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-4">
-              <Button
-                asChild
-                variant="default"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 font-normal whitespace-nowrap"
-              >
-                <Link to="/become-listener">Become a Listener</Link>
-              </Button>
 
               {/* Auth-dependent controls */}
               {isAuthenticated ? (
@@ -309,15 +303,6 @@ export function Navbar() {
                   </ul>
 
                   <div className="mt-4 flex flex-col gap-2">
-                    <Button
-                      asChild
-                      variant="default"
-                      className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-normal whitespace-nowrap"
-                    >
-                      <Link to="/become-listener" onClick={() => setIsMobileOpen(false)}>
-                        Become a Listener
-                      </Link>
-                    </Button>
 
                     {isAuthenticated ? (
                       <>
