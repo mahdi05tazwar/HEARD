@@ -24,7 +24,6 @@ export function Navbar() {
     { label: 'About Us', path: '/about' },
     { label: 'How It Works', path: '/how-it-works' },
     { label: 'Pricing', path: '/pricing' },
-    { label: 'Become a Listener', path: '/become-listener' },
     { label: 'Resources', path: '/resources' },
   ];
 
@@ -139,8 +138,14 @@ export function Navbar() {
       <div className="container mx-auto px-4 lg:px-16">
         <div className="flex items-center justify-between h-20 lg:h-24">
           {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img src={logo} alt="Heard Logo" className="h-8 lg:h-10" loading="eager" />
+          <Link to="/" className="flex items-center flex-none z-10">
+            <img
+              src={logo}
+              alt="Heard Logo"
+              className="h-8 lg:h-10 w-auto flex-shrink-0 min-w-[40px] max-w-[220px]"
+              loading="eager"
+              style={{ objectFit: 'contain' }}
+            />
           </Link>
 
           {/* Desktop Navigation (hidden on small screens) */}

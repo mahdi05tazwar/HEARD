@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { XIcon, LoaderIcon, PhoneIcon } from 'lucide-react';
 
@@ -35,6 +35,8 @@ const LISTENER_NAMES = [
   'John Doe',
 ];
 
+type Message = { id: string; sender: 'bot' | 'user'; text: string };
+
 export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
   const [step, setStep] = useState<Step>('topic');
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
@@ -45,17 +47,26 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
   const [isCalling, setIsCalling] = useState(false);
   const [listenerName, setListenerName] = useState<string>('John Doe');
 
+  // chat messages history
+  const [messages, setMessages] = useState<Message[]>([
+    { id: 'm-0', sender: 'bot', text: "I'm here to help connect you with the right listener. What brings you here today?" },
+  ]);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   // Disable background scrolling when dialog is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    if (isOpen) document.body.style.overflow = 'hidden';
+    else document.body.style.overflow = 'unset';
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, [isOpen]);
+
+  // auto-scroll when messages change
+  useEffect(() => {
+    if (!containerRef.current) return;
+    containerRef.current.scrollTo({ top: containerRef.current.scrollHeight, behavior: 'smooth' });
+  }, [messages, isCalling]);
 
   // Reset all state when closing
   const handleClose = () => {
@@ -67,12 +78,22 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
     setIsMatching(false);
     setIsCalling(false);
     setListenerName('John Doe');
+    setMessages([{ id: 'm-0', sender: 'bot', text: "I'm here to help connect you with the right listener. What brings you here today?" }]);
     onClose();
   };
+
+  // Helper to push messages
+  const pushBot = (text: string) =>
+    setMessages((m) => [...m, { id: `m-${Date.now()}`, sender: 'bot', text }]);
+
+  const pushUser = (text: string) =>
+    setMessages((m) => [...m, { id: `u-${Date.now()}`, sender: 'user', text }]);
 
   // Simulate matching when timing/duration chosen
   const simulateMatching = () => {
     setIsMatching(true);
+    pushBot('Finding your perfect match…');
+
     setTimeout(() => {
       setIsMatching(false);
       // pick a random listener name
@@ -80,27 +101,44 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
       setListenerName(LISTENER_NAMES[idx] || 'John Doe');
       setStep('calling');
       setIsCalling(true);
+      pushBot(`Connecting you to ${LISTENER_NAMES[idx] || 'John Doe'} — starting the call now.`);
     }, 1500);
   };
 
   // Handlers for each step
   const handleTopicSelect = (t: string) => {
     setSelectedTopic(t);
+    pushUser(t);
+    setListenerPref(null);
+    setTiming(null);
+    setDuration(null);
     setStep('preference');
+
+    // small bot reply after user choice
+    setTimeout(() => pushBot('Do you have a preference for who you’d like to talk with?'), 300);
   };
 
   const handlePrefSelect = (p: string) => {
     setListenerPref(p);
+    pushUser(p);
     setStep('timing');
+
+    setTimeout(() => pushBot('When would you like to have the conversation?'), 300);
   };
 
   const handleTimingSelect = (t: string) => {
     setTiming(t);
+    pushUser(t);
     setStep('duration');
+
+    setTimeout(() => pushBot('How much time do you have for this conversation?'), 300);
   };
 
   const handleDurationSelect = (d: string) => {
     setDuration(d);
+    pushUser(d);
+    // final bot acknowledgement then match
+    setTimeout(() => pushBot('Great — I’ll find someone for you now.'), 300);
     simulateMatching();
   };
 
@@ -108,7 +146,7 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-      <div className="w-full max-w-3xl bg-[#121726] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 border border-gray-700/40">
+      <div className="w-full max-w-3xl bg-[#121726] rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200 border border-gray-700/40 max-h-[90vh] flex flex-col">
         {/* Header */}
         <div className="relative px-8 py-6 border-b border-gray-700/40 bg-[#161b2b]">
           <div className="flex items-center justify-between">
@@ -139,41 +177,32 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
         </div>
 
         {/* Content */}
-        <div className="bg-[#121726] p-8 min-h-[520px]">
-          {!isCalling ? (
-            <div className="space-y-6">
-              {/* AI Message bubble */}
-              <div className="bg-[#1a2033] rounded-2xl p-6 border border-gray-700/50">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <span className="text-xl">🤖</span>
-                  </div>
-                  <div className="flex-1">
-                    {step === 'topic' && (
-                      <p className="text-gray-100 leading-relaxed">
-                        I’m here to help connect you with the right listener. What brings you here today?
-                      </p>
-                    )}
-                    {step === 'preference' && (
-                      <p className="text-gray-100 leading-relaxed">
-                        Do you have a preference for who you’d like to talk with?
-                      </p>
-                    )}
-                    {step === 'timing' && (
-                      <p className="text-gray-100 leading-relaxed">
-                        When would you like to have the conversation?
-                      </p>
-                    )}
-                    {step === 'duration' && (
-                      <p className="text-gray-100 leading-relaxed">
-                        How much time do you have for this conversation?
-                      </p>
-                    )}
+        <div className="bg-[#121726] p-6 flex-1 flex flex-col min-h-0">
+          {/* Messages area */}
+          <div ref={containerRef} className="flex-1 overflow-y-auto space-y-4 pb-4 min-h-0">
+            {messages.map((m) =>
+              m.sender === 'bot' ? (
+                <div key={m.id} className="bg-[#1a2033] rounded-2xl p-4 border border-gray-700/50 max-w-[78%]">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <span className="text-xl">🤖</span>
+                    </div>
+                    <div className="text-gray-100 leading-relaxed">{m.text}</div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div key={m.id} className="flex justify-end">
+                  <div className="bg-white text-gray-900 rounded-2xl p-3 max-w-[78%]">
+                    {m.text}
+                  </div>
+                </div>
+              )
+            )}
+          </div>
 
-              {/* Step controls */}
+          {/* Controls area */}
+          {!isCalling ? (
+            <div className="mt-4">
               {step === 'topic' && (
                 <div className="flex flex-wrap gap-3">
                   {TOPICS.map((t) => (
@@ -234,7 +263,6 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
                 </div>
               )}
 
-              {/* Progress / summary */}
               <div className="mt-4 text-sm text-gray-400">
                 <span className="mr-2">Selected:</span>
                 <span className="text-gray-300">
@@ -244,7 +272,7 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
             </div>
           ) : (
             // Calling screen
-            <div className="flex flex-col items-center justify-center min-h-[420px] space-y-8">
+            <div className="flex flex-col items-center justify-center min-h-[320px] space-y-8">
               <div className="w-24 h-24 rounded-full bg-primary/25 flex items-center justify-center shadow-inner">
                 <PhoneIcon size={40} className="text-primary animate-pulse" />
               </div>
@@ -271,6 +299,23 @@ export function ChatDialog({ isOpen, onClose }: ChatDialogProps) {
               </div>
             </div>
           )}
+        </div>
+        {/* Inert chat input (placeholder for future features) */}
+        <div className="mt-4 pt-3 border-t border-gray-700/40">
+          <div className="flex items-center gap-3">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                aria-label="Chat input (inactive)"
+                disabled
+                className="w-full bg-[#0f1624] text-gray-200 placeholder:text-gray-500 rounded-full py-3 px-4 border border-gray-700/30 focus:outline-none focus:ring-0 cursor-not-allowed"
+              />
+            </div>
+            <div className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-800/40">
+              {/* empty space reserved for future send/attachment icon */}
+            </div>
+          </div>
         </div>
       </div>
     </div>

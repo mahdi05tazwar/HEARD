@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { UserIcon, MessageCircleIcon, ShieldCheckIcon, ChevronDownIcon } from 'lucide-react';
 
 export function HowItWorks() {
   const [activeTab, setActiveTab] = useState<'users' | 'listeners'>('users');
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -66,7 +67,10 @@ export function HowItWorks() {
             <Button
               variant={activeTab === 'listeners' ? 'default' : 'outline'}
               size="lg"
-              onClick={() => setActiveTab('listeners')}
+              onClick={() => {
+                setActiveTab('listeners');
+                navigate('/become-listener');
+              }}
               className="font-normal text-base"
             >
               For Listeners

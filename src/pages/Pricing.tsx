@@ -32,7 +32,7 @@ export function Pricing() {
       name: '5 Session Pack',
       price: '180',
       currency: 'HK$',
-      subtitle: '36 calls (36 HK$ each)',
+      subtitle: '(36 HK$ each)',
       description: 'Save 10% with a session bundle',
       badge: 'Most Popular',
       features: [
