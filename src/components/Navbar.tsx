@@ -6,7 +6,6 @@ import { ChevronDownIcon, MenuIcon, XIcon, LogOutIcon } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ChatDialog } from '@/components/ChatDialog';
 
-
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMoreOpen, setIsMoreOpen] = useState(false);
@@ -71,12 +70,10 @@ export function Navbar() {
 
   // prevent background scroll when mobile menu is open
   useEffect(() => {
-    // remember previous overflow so we can restore it
     const prevOverflow = typeof document !== 'undefined' ? document.body.style.overflow : '';
     if (isMobileOpen) document.body.style.overflow = 'hidden';
     else document.body.style.overflow = prevOverflow || '';
     return () => {
-      // restore on unmount
       document.body.style.overflow = prevOverflow || '';
     };
   }, [isMobileOpen]);
@@ -88,9 +85,7 @@ export function Navbar() {
     const el = mobileScrollRef.current;
     if (!el) return;
 
-    // Prevent touchmove on the body except when the touch starts inside the scrollable panel
     const handleTouchMove = (e: TouchEvent) => {
-      // If the touch is inside our scrollable element, allow it
       if (e.target && el.contains(e.target as Node)) return;
       e.preventDefault();
     };
@@ -106,13 +101,9 @@ export function Navbar() {
     };
   }, [isMobileOpen]);
 
-
-  // combined links for mobile (nav + more)
   const mobileLinks = [...navLinks, ...moreLinks];
 
-  // action handlers
   const handleStartConversation = () => {
-    // if not authenticated, send to login; otherwise open dialog
     if (!isAuthenticated) {
       navigate('/login');
       setIsMobileOpen(false);
@@ -207,10 +198,9 @@ export function Navbar() {
           </div>
 
           {/* Right-side buttons */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            {/* Desktop auth controls */}
             <div className="hidden md:flex items-center gap-4">
-
-              {/* Auth-dependent controls */}
               {isAuthenticated ? (
                 <>
                   <Button
@@ -235,6 +225,49 @@ export function Navbar() {
                   className="border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
                 >
                   <Link to="/login">Login / Sign Up</Link>
+                </Button>
+              )}
+            </div>
+
+            {/* Mobile auth controls (visible on small screens, outside the hamburger) */}
+            <div className="flex items-center md:hidden gap-2">
+              {isAuthenticated ? (
+                <>
+                  <button
+                    onClick={handleStartConversation}
+                    className="p-2 rounded-md bg-primary hover:bg-primary/90 flex items-center justify-center"
+                    title="Start A Conversation"
+                    aria-label="Start A Conversation"
+                  >
+                    <span className="sr-only">Start A Conversation</span>
+                    {/* compact visual: single dot or small text; keeping text for accessibility */}
+                    <span className="text-white text-sm">Talk</span>
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    aria-label="Logout"
+                    className="p-2 rounded-md hover:bg-gray-100"
+                    title="Logout"
+                  >
+                    <LogOutIcon size={18} />
+                  </button>
+                </>
+              ) : (
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-primary text-primary bg-background hover:bg-primary/5 font-normal whitespace-nowrap"
+                >
+                  <Link
+                    to="/login"
+                    onClick={() => {
+                      // ensure mobile menu closed if user tapped this on small screen
+                      setIsMobileOpen(false);
+                    }}
+                  >
+                    Login / Sign Up
+                  </Link>
                 </Button>
               )}
             </div>
@@ -303,7 +336,6 @@ export function Navbar() {
                   </ul>
 
                   <div className="mt-4 flex flex-col gap-2">
-
                     {isAuthenticated ? (
                       <>
                         <Button
@@ -341,9 +373,6 @@ export function Navbar() {
         </div>
       )}
 
-
-
-      
       {isAuthenticated && (
         <ChatDialog
           isOpen={isChatOpen}

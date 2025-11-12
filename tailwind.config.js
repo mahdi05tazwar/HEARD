@@ -7,7 +7,7 @@ module.exports = {
   theme: {
     screens: {
       sm: '640px',
-      md: '1000px',   // changed from 768px to 900px (navbar will switch at 900px now)
+      md: '900px',   // changed from 768px to 900px (navbar will switch at 900px now)
       lg: '1024px',
       xl: '1280px',
       '2xl': '1536px',
