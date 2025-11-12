@@ -241,7 +241,7 @@ export function Navbar() {
                   >
                     <span className="sr-only">Start A Conversation</span>
                     {/* compact visual: single dot or small text; keeping text for accessibility */}
-                    <span className="text-white text-sm">Talk</span>
+                    <span className="text-white text-sm">Start Talking</span>
                   </button>
 
                   <button
